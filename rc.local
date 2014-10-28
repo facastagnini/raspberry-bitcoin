@@ -17,11 +17,11 @@ if [ "$_IP" ]: then
 	printf "My IP address is %s\n" "$_IP"
 fi"
 
-# start bitcoind - only for solo mining
-#/usr/local/bin/bitcoind -conf=/root/.bitcoin/bitcoin.conf
+# start bitcoind
+/usr/local/bin/bitcoind -conf=/root/.bitcoin/bitcoin.conf
 
 cd /root/PiMiner
-#python PiMiner.py &
-#nohup /root/cgminer/cgminer --config /root/cgminer.conf >/dev/null 2>&1&
+python PiMiner.py &
+nohup /root/cgminer/cgminer --config /root/cgminer.conf >/dev/null 2>&1&
 
 exit 0
