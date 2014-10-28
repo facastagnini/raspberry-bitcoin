@@ -1,23 +1,73 @@
 Raspberry-Bitcoin
 =================
 
-Build a full node + miner for a Raspberry Pi B.
+Build a full node + miner with a Raspberry Pi B.
 
 
 Installation
 ------------
 
- - Install Raspbian on a 16Gb or bigger SD card. (There is a guide here http://www.raspberrypi.org/documentation/installation/installing-images/README.md)
+1) Install Raspbian on a 16Gb or bigger SD card. (There is a guide here http://www.raspberrypi.org/documentation/installation/installing-images/README.md)
 
- - Build the full node.
+2) Clone this git repo.
+
+	apt-get update
+	apt-get install git
+	cd /root
+	git clone git@github.com:facastagnini/raspberry-bitcoin.git
+
+
+3) Setup the full node.
    A full node is bla bla bla and provides this this and this and help Bitcoin in this way.
    Since the Raspbian repositories host an archaic version of Bitcoin Core (the original Bitcoin client), we will have to compile from source.
 
-	apt-get update
-	apt-get dist-upgrade
+
+	# install building dependencies
+	apt-get install build-essential autoconf libssl-dev libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev libboost-system-dev libboost-test-dev libboost-thread-dev
+
+	# install Berkeley DB from source
+	cd /usr/src
+	wget http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz
+	tar -xzvf db-4.8.30.NC.tar.gz
+	cd db-4.8.30.NC/build_unix/
+
+	../dist/configure --enable-cxx
+	make
+	sudo make install
+
+	# create a temporary swap file
+	dd if=/dev/zero of=/opt/swapfile bs=1024 count=1024000
+	mkswap /opt/swapfile
+	swapon /opt/swapfile
+
+	# install Bitcoin Core
+	cd /usr/src
+	git clone -b 0.9.3 https://github.com/bitcoin/bitcoin.git
+	cd bitcoin/
+	./autogen.sh
+	./configure --disable-wallet
+	make
+	make install
+
+	# remove the swap file
+	swapoff /opt/swapfile
+
+	# setup the bitcoin config file
+	mkdir /root/bitcoin
+	ln /root/raspberry-bitcoin/bitcoin.conf /root/.bitcoin/bitcoin.conf
+	
+	# start the bitcoin daemon
+	/usr/local/bin/bitcoind -conf=/root/.bitcoin/bitcoin.conf
 
 
-CREDIT: I based this part of the instruccions from this excelent article -> http://blog.pryds.eu/2014/06/compile-bitcoin-core-on-raspberry-pi.html
+Bitcoind will connect to some peers and start downloading the blockchain. You can monitor the progress with the folowing command:
+
+	bitcoind getinfo
+
+CREDIT: I based this part of the instruccions on this excelent article -> http://blog.pryds.eu/2014/06/compile-bitcoin-core-on-raspberry-pi.html
+
+4) Install CGMiner
+
 
 Firewall rules
 --------------
