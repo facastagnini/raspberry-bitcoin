@@ -1,7 +1,11 @@
 Raspberry-Bitcoin
 =================
 
+THIS IS WORK IN PROGRESS
+
 Build a full node + miner with a Raspberry Pi B.
+
+DISCLAIMER: This is a personal project to learn about Bitcoin and how to colaborate to keep the distribuited network strong and healthy. This is NOT an attempt to make money.
 
 
 Installation
@@ -19,6 +23,7 @@ Installation
 
 3) Setup the full node.
    A full node is bla bla bla and provides this this and this and help Bitcoin in this way.
+
    Since the Raspbian repositories host an archaic version of Bitcoin Core (the original Bitcoin client), we will have to compile from source.
 
 
@@ -53,7 +58,7 @@ Installation
 	swapoff /opt/swapfile
 
 	# setup the bitcoin config file
-	mkdir /root/bitcoin
+	mkdir /root/.bitcoin
 	ln /root/raspberry-bitcoin/bitcoin.conf /root/.bitcoin/bitcoin.conf
 	
 	# start the bitcoin daemon
@@ -66,7 +71,25 @@ Bitcoind will connect to some peers and start downloading the blockchain. You ca
 
 CREDIT: I based this part of the instruccions on this excelent article -> http://blog.pryds.eu/2014/06/compile-bitcoin-core-on-raspberry-pi.html
 
-4) Install CGMiner
+4) Install CGMiner 
+
+	apt-get install libusb-1.0-0-dev libusb-1.0-0 libcurl4-openssl-dev libncurses5-dev libudev-dev
+	cd /usr/src
+	wget http://ck.kolivas.org/apps/cgminer/cgminer-4.7.0.tar.bz2
+	tar xvf cgminer-4.7.0.tar.bz2
+	cd cgminer-4.7.0
+	CFLAGS="-O2 -Wall -march=native" ./configure --enable-ants2
+	make
+	ln -s /usr/src/cgminer-4.7.0 /usr/src/cgminer
+
+
+5) Install adafruit goodies
+5.1) Adafruit GPIO: https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup
+5.2) Adafruit 16x2 Character LCD: https://learn.adafruit.com/adafruit-16x2-character-lcd-plus-keypad-for-raspberry-pi/overview
+
+
+
+
 
 
 Firewall rules
