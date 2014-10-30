@@ -13,12 +13,22 @@ Installation
 
 1) Install Raspbian on a 16Gb or bigger SD card. (There is a guide here http://www.raspberrypi.org/documentation/installation/installing-images/README.md)
 
-2) Upgrade the system, add base packages, tune and expand RAM (installing ZRAM)
+2) Upgrade the system, add base packages, optimize and expand RAM (installing ZRAM)
 
 	# upgrade the system
 	apt-get update
 	apt-get dist-upgrade
-	apt-get install rpi-update htom iotop
+	apt-get install rpi-update htop iotop usbutils
+
+	# log in ram
+	service rsyslog stop
+	echo "tmpfs		/var/log	tmpfs	nosuid,noexec,nodev,mode=0755,size=32M" >>/etc/fstab
+	rm -r /var/log/*
+	mount /var/log
+	service rsyslog start
+
+	# /tmp in ram
+	echo "RAMTMP=yes" >> /etc/default/tmpfs
 
 	# update the firmware
 	rpi-update
@@ -39,6 +49,9 @@ Installation
 
 	# remove syslog
 	# apt-get -y remove --purge rsyslog
+
+	# compile zram module
+	apt-get install linux-headers-rpi-rpfv
 
 	# drop the zram script
 	echo << EOF >/etc/init.d/zram
@@ -93,6 +106,8 @@ Installation
 	esac
 	EOF
 	chmod +x /etc/init.d/zram
+	
+	#add zram.enabled=1 to /boot/cmdline.txt
 
 	# start on boot disable, rpi official firmware misses the zram module
 	# update-rc.d zram defaults
@@ -167,10 +182,10 @@ CREDIT: I based this part of the instruccions on this excelent article -> http:/
 	cd /usr/src
 	wget http://ck.kolivas.org/apps/cgminer/cgminer-4.7.0.tar.bz2
 	tar xvf cgminer-4.7.0.tar.bz2
-	cd cgminer-4.7.0
-	CFLAGS="-O2 -Wall -march=native" ./configure --enable-ants2
+	ln -sf /usr/src/cgminer-4.7.0 /usr/src/cgminer
+	cd cgminer
+	CFLAGS="-O2 -Wall" ./configure --enable-icarus
 	make
-	#ln -s /usr/src/cgminer-4.7.0 /usr/src/cgminer
 
 	# setup the bitcoin config file
 	cp /root/raspberry-bitcoin/cgminer.conf /etc/cgminer.conf
@@ -212,7 +227,7 @@ CREDIT: I based this part of the instruccions on this excelent article -> http:/
 	
 	cd /usr/src/PiMiner
 	python PiMiner.py &
-	nohup /usr/src/cgminer-4.7.0/cgminer --config /etc/cgminer.conf >/dev/null 2>&1&
+	nohup /usr/src/cgminer/cgminer --config /etc/cgminer.conf >/dev/null 2>&1&
 	
 	exit 0
 
@@ -229,6 +244,10 @@ ASIC USB miner
 
 I am using BITMAIN ANTMINER U2+ ASIC Bitcoin Miner (http://www.amazon.com/gp/product/B00JT3HMRI)
 
+Download the latest version of cgminer, currently v4.3.0. Configure the "anu-freq" setting to change the speed of your U2 devices as follows: 200 (default) for 1.6 Gh/s, 250 for 2.0 Gh/s, 275 for 2.2 Gh/s, or 300 for 2.4 Gh/s.
+
+bfgminer.exe -o pool -u user -p pass -S erupter:all -S antminer:all --set-device antminer:clock=x0981 --icarus-options 115200:2:2
+
 antminer_clock_settings:
 	0781 = 1.6 Ghps
 	0881 = 1.8 Ghps
@@ -237,3 +256,5 @@ antminer_clock_settings:
 	0A81 = 2.2 Ghps
 	0B01 = 2.3 Ghps
 	0B81 = 2.4 Ghps
+
+REFERENCE: https://github.com/AntMiner/AntGen1
