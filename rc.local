@@ -19,6 +19,6 @@ echo "My IP address is $(hostname -I)" || true
 
 cd /usr/src/PiMiner
 python PiMiner.py &
-nohup /usr/src/cgminer-4.7.0/cgminer --config /etc/cgminer.conf >/dev/null 2>&1&
+nohup /usr/src/cgminer/cgminer --config /etc/cgminer.conf >/dev/null 2>&1&
 
 exit 0
