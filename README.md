@@ -203,7 +203,18 @@ CREDIT: I based this part of the instruccions on this excelent article -> http:/
 	cd /usr/src
 	git clone https://github.com/adafruit/PiMiner.git
 
-7) Auto-start on boot.
+7) Monitoring
+
+	cd /usr/src
+	# install google python library
+	wget https://gdata-python-client.googlecode.com/files/gdata-2.0.18.tar.gz
+	tar xvf gdata-2.0.18.tar.gz
+	cd gdata-2.0.18
+	python setup.py install
+	python tests/run_data_tests.py
+	vi samples/docs/docs_example.py
+
+8) Auto-start on boot.
    Make your /etc/rc.local look something like this:
 
 	#!/bin/sh -e
