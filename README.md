@@ -13,12 +13,65 @@ Installation
 
 1) Install Raspbian on a 16Gb or bigger SD card. (There is a guide here http://www.raspberrypi.org/documentation/installation/installing-images/README.md)
 
-2) Upgrade the system, add base packages, optimize and expand RAM (installing ZRAM)
+2) Upgrade the system, add base packages, optimize, configure network and expand RAM (installing ZRAM)
 
 	# upgrade the system
 	apt-get update
 	apt-get dist-upgrade
-	apt-get install rpi-update htop iotop usbutils
+	apt-get install rpi-update htop iotop usbutils dosfstools bridge-utils iw wpasupplicant
+
+	# configure automatic updates
+	apt-get install unattended-upgrades
+	echo << EOF >/etc/apt/apt.conf.d/20auto-upgrades
+// Enable the update/upgrade script (0=disable)
+APT::Periodic::Enable "1";
+
+// Do "apt-get update" automatically every n-days (0=disable)
+APT::Periodic::Update-Package-Lists "1";
+
+// Do "apt-get upgrade --download-only" every n-days (0=disable)
+//APT::Periodic::Download-Upgradeable-Packages "1";
+
+// Run the "unattended-upgrade" security upgrade script
+// every n-days (0=disabled)
+// Requires the package "unattended-upgrades" and will write
+// a log in /var/log/unattended-upgrades
+APT::Periodic::Unattended-Upgrade "1";
+
+// Do "apt-get autoclean" every n-days (0=disable)
+APT::Periodic::AutocleanInterval "7";
+EOF
+
+	# network configuration
+	echo << EOF >/etc/network/interfaces
+auto lo
+iface lo inet loopback
+
+auto ehto0
+iface eth0 inet manual
+
+allow-hotplug wlan0
+iface wlan0 inet manual
+	wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+
+iface default inet static
+	address 192.168.1.200
+	network 192.168.1.0
+	netmask 255.255.255.0
+	broadcast 192.168.1.255
+	gateway 192.168.1.1
+EOF
+	# tell the wpa_supplicant to reconfigure itself
+	echo << EOF >/etc/wpa_supplicant/wpa_supplicant.conf
+network={
+ssid="NETGEAR12"
+psk="SeCrEt"
+proto=RSN
+key_mgmt=WPA-PSK
+pairwise=CCMP
+auth_alg=OPEN
+}
+EOF
 
 	# log in ram
 	service rsyslog stop
@@ -109,7 +162,7 @@ Installation
 	
 	#add zram.enabled=1 to /boot/cmdline.txt
 
-	# start on boot disable, rpi official firmware misses the zram module
+	# start on boot disable, rpi official firmware is missing the zram module
 	# update-rc.d zram defaults
 
 	# done, reboot
