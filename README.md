@@ -269,3 +269,9 @@ antminer_clock_settings:
 	0B81 = 2.4 Ghps
 
 REFERENCE: https://github.com/AntMiner/AntGen1
+
+
+Contributing
+------------
+
+Forks, patches and other feedback are welcome.
