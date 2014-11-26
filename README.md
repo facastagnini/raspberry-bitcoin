@@ -168,15 +168,27 @@ EOF
 	# done, reboot
 	reboot
 
+3) The RAM memory will not be enough, so we are going to add 2GB thumb drive as a swap drive
 
-3) Clone this git repo.
+	# my usb drive is in /dev/sda
+        mkswap /dev/sda
+        swapon /dev/sda
+
+	# mount automatically on boot
+	echo "/dev/sda	none		swap	discard,sw	0	0" >> /etc/fstab
+
+
+4) Clone this git repo.
 
 	apt-get install git
 	cd /root
 	git clone git@github.com:facastagnini/raspberry-bitcoin.git
 
+	# add logrotate rule
+	ln -s /root/raspberry-bitcoin/logrotate.d/bitcoin /etc/logrotate.d/bitcoin
 
-4) Setup the full node.
+
+5) Setup the full node.
    A full node is bla bla bla and provides this this and this and help Bitcoin in this way.
 
    Since the Raspbian repositories host an archaic version of Bitcoin Core (the original Bitcoin client), we will have to compile from source.
@@ -195,11 +207,6 @@ EOF
 	make
 	sudo make install
 
-	# create a temporary swap file
-	dd if=/dev/zero of=/opt/swapfile bs=1024 count=1024000
-	mkswap /opt/swapfile
-	swapon /opt/swapfile
-
 	# install Bitcoin Core
 	cd /usr/src
 	git clone -b 0.9.3 https://github.com/bitcoin/bitcoin.git
@@ -207,10 +214,9 @@ EOF
 	./autogen.sh
 	./configure --disable-wallet
 	make
+	# strip will reduce the size of the binary from 42Mb to ~2Mb
+	strip bitcoind
 	make install
-
-	# remove the swap file
-	swapoff /opt/swapfile
 
         # setup the bitcoin config file
         mkdir /root/.bitcoin
@@ -226,7 +232,7 @@ Bitcoind will connect to some peers and start downloading the blockchain. You ca
 
 CREDIT: I based this part of the instruccions on this excelent article -> http://blog.pryds.eu/2014/06/compile-bitcoin-core-on-raspberry-pi.html
 
-5) Install CGMiner 
+6) Install CGMiner 
 
 	# install building dependencies
 	apt-get install libusb-1.0-0-dev libusb-1.0-0 libcurl4-openssl-dev libncurses5-dev libudev-dev
@@ -245,18 +251,18 @@ CREDIT: I based this part of the instruccions on this excelent article -> http:/
 	# edit the configuration add the pool url, user and password. If you are mining 'solo' point to your local bitcoind node
 	vi /etc/cgminer.conf 
 
-6) Install adafruit goodies
+7) Install adafruit goodies
 
-6.1) Adafruit GPIO: https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup
+7.1) Adafruit GPIO: https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup
 
-6.2) Adafruit 16x2 Character LCD: https://learn.adafruit.com/adafruit-16x2-character-lcd-plus-keypad-for-raspberry-pi/overview
+7.2) Adafruit 16x2 Character LCD: https://learn.adafruit.com/adafruit-16x2-character-lcd-plus-keypad-for-raspberry-pi/overview
 
-6.3) Install PiMiner
+7.3) Install PiMiner
 
 	cd /usr/src
 	git clone https://github.com/adafruit/PiMiner.git
 
-7) Monitoring
+8) Monitoring
 
 	cd /usr/src
 	# install google python library
@@ -267,7 +273,7 @@ CREDIT: I based this part of the instruccions on this excelent article -> http:/
 	python tests/run_data_tests.py
 	vi samples/docs/docs_example.py
 
-8) Auto-start on boot.
+9) Auto-start on boot.
    Make your /etc/rc.local look something like this:
 
 	#!/bin/sh -e

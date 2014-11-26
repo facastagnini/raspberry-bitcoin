@@ -15,7 +15,8 @@
 echo "My IP address is $(hostname -I)" || true
 
 # start bitcoind
-/usr/local/bin/bitcoind -conf=/root/.bitcoin/bitcoin.conf
+cd /root
+/usr/local/bin/bitcoind -conf=/root/.bitcoin/bitcoin.conf > /var/log/bitcoin.log
 
 cd /usr/src/PiMiner
 python PiMiner.py &
