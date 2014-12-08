@@ -13,12 +13,65 @@ Installation
 
 1) Install Raspbian on a 16Gb or bigger SD card. (There is a guide here http://www.raspberrypi.org/documentation/installation/installing-images/README.md)
 
-2) Upgrade the system, add base packages, optimize and expand RAM (installing ZRAM)
+2) Upgrade the system, add base packages, optimize, configure network and expand RAM (installing ZRAM)
 
 	# upgrade the system
 	apt-get update
 	apt-get dist-upgrade
-	apt-get install rpi-update htop iotop usbutils
+	apt-get install rpi-update htop iotop usbutils dosfstools bridge-utils iw wpasupplicant
+
+	# configure automatic updates
+	apt-get install unattended-upgrades
+	echo << EOF >/etc/apt/apt.conf.d/20auto-upgrades
+// Enable the update/upgrade script (0=disable)
+APT::Periodic::Enable "1";
+
+// Do "apt-get update" automatically every n-days (0=disable)
+APT::Periodic::Update-Package-Lists "1";
+
+// Do "apt-get upgrade --download-only" every n-days (0=disable)
+//APT::Periodic::Download-Upgradeable-Packages "1";
+
+// Run the "unattended-upgrade" security upgrade script
+// every n-days (0=disabled)
+// Requires the package "unattended-upgrades" and will write
+// a log in /var/log/unattended-upgrades
+APT::Periodic::Unattended-Upgrade "1";
+
+// Do "apt-get autoclean" every n-days (0=disable)
+APT::Periodic::AutocleanInterval "7";
+EOF
+
+	# network configuration
+	echo << EOF >/etc/network/interfaces
+auto lo
+iface lo inet loopback
+
+auto ehto0
+iface eth0 inet manual
+
+allow-hotplug wlan0
+iface wlan0 inet manual
+	wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+
+iface default inet static
+	address 192.168.1.200
+	network 192.168.1.0
+	netmask 255.255.255.0
+	broadcast 192.168.1.255
+	gateway 192.168.1.1
+EOF
+	# tell the wpa_supplicant to reconfigure itself
+	echo << EOF >/etc/wpa_supplicant/wpa_supplicant.conf
+network={
+ssid="NETGEAR12"
+psk="SeCrEt"
+proto=RSN
+key_mgmt=WPA-PSK
+pairwise=CCMP
+auth_alg=OPEN
+}
+EOF
 
 	# log in ram
 	service rsyslog stop
@@ -109,21 +162,33 @@ Installation
 	
 	#add zram.enabled=1 to /boot/cmdline.txt
 
-	# start on boot disable, rpi official firmware misses the zram module
+	# start on boot disable, rpi official firmware is missing the zram module
 	# update-rc.d zram defaults
 
 	# done, reboot
 	reboot
 
+3) The RAM memory will not be enough, so we are going to add 2GB thumb drive as a swap drive
 
-3) Clone this git repo.
+	# my usb drive is in /dev/sda
+        mkswap /dev/sda
+        swapon /dev/sda
+
+	# mount automatically on boot
+	echo "/dev/sda	none		swap	discard,sw	0	0" >> /etc/fstab
+
+
+4) Clone this git repo.
 
 	apt-get install git
 	cd /root
 	git clone git@github.com:facastagnini/raspberry-bitcoin.git
 
+	# add logrotate rule
+	ln -s /root/raspberry-bitcoin/logrotate.d/bitcoin /etc/logrotate.d/bitcoin
 
-4) Setup the full node.
+
+5) Setup the full node.
    A full node is bla bla bla and provides this this and this and help Bitcoin in this way.
 
    Since the Raspbian repositories host an archaic version of Bitcoin Core (the original Bitcoin client), we will have to compile from source.
@@ -142,11 +207,6 @@ Installation
 	make
 	sudo make install
 
-	# create a temporary swap file
-	dd if=/dev/zero of=/opt/swapfile bs=1024 count=1024000
-	mkswap /opt/swapfile
-	swapon /opt/swapfile
-
 	# install Bitcoin Core
 	cd /usr/src
 	git clone -b 0.9.3 https://github.com/bitcoin/bitcoin.git
@@ -154,10 +214,9 @@ Installation
 	./autogen.sh
 	./configure --disable-wallet
 	make
+	# strip will reduce the size of the binary from 42Mb to ~2Mb
+	strip bitcoind
 	make install
-
-	# remove the swap file
-	swapoff /opt/swapfile
 
         # setup the bitcoin config file
         mkdir /root/.bitcoin
@@ -173,7 +232,7 @@ Bitcoind will connect to some peers and start downloading the blockchain. You ca
 
 CREDIT: I based this part of the instruccions on this excelent article -> http://blog.pryds.eu/2014/06/compile-bitcoin-core-on-raspberry-pi.html
 
-5) Install CGMiner 
+6) Install CGMiner 
 
 	# install building dependencies
 	apt-get install libusb-1.0-0-dev libusb-1.0-0 libcurl4-openssl-dev libncurses5-dev libudev-dev
@@ -192,18 +251,18 @@ CREDIT: I based this part of the instruccions on this excelent article -> http:/
 	# edit the configuration add the pool url, user and password. If you are mining 'solo' point to your local bitcoind node
 	vi /etc/cgminer.conf 
 
-6) Install adafruit goodies
+7) Install adafruit goodies
 
-6.1) Adafruit GPIO: https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup
+7.1) Adafruit GPIO: https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup
 
-6.2) Adafruit 16x2 Character LCD: https://learn.adafruit.com/adafruit-16x2-character-lcd-plus-keypad-for-raspberry-pi/overview
+7.2) Adafruit 16x2 Character LCD: https://learn.adafruit.com/adafruit-16x2-character-lcd-plus-keypad-for-raspberry-pi/overview
 
-6.3) Install PiMiner
+7.3) Install PiMiner
 
 	cd /usr/src
 	git clone https://github.com/adafruit/PiMiner.git
 
-7) Monitoring
+8) Monitoring
 
 	cd /usr/src
 	# install google python library
@@ -214,7 +273,7 @@ CREDIT: I based this part of the instruccions on this excelent article -> http:/
 	python tests/run_data_tests.py
 	vi samples/docs/docs_example.py
 
-8) Auto-start on boot.
+9) Auto-start on boot.
    Make your /etc/rc.local look something like this:
 
 	#!/bin/sh -e

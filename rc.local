@@ -12,16 +12,14 @@
 # By default this script does nothing.
 
 # print the IP address
-_IP=$(hostname -I) || true
-if [ "$_IP" ]: then
-	printf "My IP address is %s\n" "$_IP"
-fi"
+echo "My IP address is $(hostname -I)" || true
 
 # start bitcoind
-/usr/local/bin/bitcoind -conf=/root/.bitcoin/bitcoin.conf
+cd /root
+/usr/local/bin/bitcoind -conf=/root/.bitcoin/bitcoin.conf > /var/log/bitcoin.log
 
-cd /root/PiMiner
+cd /usr/src/PiMiner
 python PiMiner.py &
-nohup /root/cgminer/cgminer --config /root/cgminer.conf >/dev/null 2>&1&
+nohup /usr/src/cgminer/cgminer --config /etc/cgminer.conf >/dev/null 2>&1&
 
 exit 0
