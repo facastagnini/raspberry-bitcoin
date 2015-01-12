@@ -197,19 +197,13 @@ EOF
 	# install building dependencies
 	apt-get install build-essential autoconf libssl-dev libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev libboost-system-dev libboost-test-dev libboost-thread-dev
 
-	# install Berkeley DB from source
-	cd /usr/src
-	wget http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz
-	tar -xzvf db-4.8.30.NC.tar.gz
-	cd db-4.8.30.NC/build_unix/
-
 	../dist/configure --enable-cxx
 	make
 	sudo make install
 
 	# install Bitcoin Core
 	cd /usr/src
-	git clone -b 0.9.3 https://github.com/bitcoin/bitcoin.git
+	git clone -b 0.10 https://github.com/bitcoin/bitcoin.git
 	cd bitcoin/
 	./autogen.sh
 	./configure --disable-wallet

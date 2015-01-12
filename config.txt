@@ -41,4 +41,7 @@ arm_freq=800
 # MPG2 license
 decode_MPG2=0xa44b81c6
 
+# reduce video memory
+gpu_mem=8
+
 # for more options see http://elinux.org/RPi_config.txt
