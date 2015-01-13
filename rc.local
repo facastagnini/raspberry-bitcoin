@@ -20,6 +20,8 @@ cd /root
 
 cd /usr/src/PiMiner
 python PiMiner.py &
+
+cd /tmp
 nohup /usr/src/cgminer/cgminer --config /etc/cgminer.conf >/dev/null 2>&1&
 
 exit 0
