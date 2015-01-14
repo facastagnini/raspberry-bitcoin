@@ -3,17 +3,17 @@ Raspberry-Bitcoin
 
 == THIS IS WORK IN PROGRESS==
 
-It is NOT possible to run a full node on the raspberry pi using Bitcoin Core. Not enought CPU, neither RAM.
+IMPORTANT: It is NOT possible to run a full node on the raspberry pi using Bitcoin Core. Not enought CPU, neither RAM.
 
-This is an attempt to build a full node with btcd (https://github.com/conformal/btcd) on a Raspberry Pi B 512MB.
+Build a full node + miner with a Raspberry Pi B 512MB.
 
-DISCLAIMER: This is a personal project to learn about Bitcoin and how to colaborate to keep the distribuited network strong and healthy. This is not an attempt to make money.
+DISCLAIMER: This is a personal project to learn about Bitcoin and how to colaborate to keep the distribuited network strong and healthy. This is NOT an attempt to make money.
 
 
 Installation
 ------------
 
-1) Install Raspbian on a 32Gb or bigger SD card. (There is a guide here http://www.raspberrypi.org/documentation/installation/installing-images/README.md)
+1) Install Raspbian on a 16Gb or bigger SD card. (There is a guide here http://www.raspberrypi.org/documentation/installation/installing-images/README.md)
 
 2) Upgrade the system, add base packages, optimize, configure network and expand RAM (installing ZRAM)
 
@@ -66,7 +66,7 @@ EOF
 	# tell the wpa_supplicant to reconfigure itself
 	echo << EOF >/etc/wpa_supplicant/wpa_supplicant.conf
 network={
-ssid="NETGEAR"
+ssid="NETGEAR12"
 psk="SeCrEt"
 proto=RSN
 key_mgmt=WPA-PSK
@@ -189,39 +189,42 @@ EOF
 	# add logrotate rule
 	ln -s /root/raspberry-bitcoin/logrotate.d/bitcoin /etc/logrotate.d/bitcoin
 
-5) Install Go
 
-	apt-get install -y mercurial gcc libc6-dev
-	hg clone -u default https://code.google.com/p/go /usr/src/go
-	cd /usr/src/go/src
-	./all.bash
-	#./make.bash
-
-	echo "export GOROOT=/usr/src/go"      > /etc/profile.d/go.sh
-	echo "export GOPATH=/usr/src/gocode" >> /etc/profile.d/go.sh
-	echo "export PATH=$PATH:$GOROOT/bin" >> /etc/profile.d/go.sh
-	chmod 0555 /etc/profile.d/go.sh
-
-6) Install btcd and setup the full node.
+5) Setup the full node.
    A full node is bla bla bla and provides this this and this and help Bitcoin in this way.
 
+   Since the Raspbian repositories host an archaic version of Bitcoin Core (the original Bitcoin client), we will have to compile from source.
 
-	# to install
-	go get github.com/conformal/btcd/...
-	# later on, to upgrade
-	go get -u github.com/conformal/btcd/...
+
+	# install building dependencies
+	apt-get install build-essential autoconf libssl-dev libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev libboost-system-dev libboost-test-dev libboost-thread-dev
+
+	../dist/configure --enable-cxx
+	make
+	sudo make install
+
+	# install Bitcoin Core
+	cd /usr/src
+	git clone -b 0.10 https://github.com/bitcoin/bitcoin.git
+	cd bitcoin/
+	./autogen.sh
+	./configure --disable-wallet
+	make
+	# strip will reduce the size of the binary from 42Mb to ~2Mb
+	strip bitcoind
+	make install
 
         # setup the bitcoin config file
-        mkdir /root/.btcd
-        ln /root/raspberry-bitcoin/btcd.conf /root/.btcd/btcd.conf
+        mkdir /root/.bitcoin
+        ln /root/raspberry-bitcoin/bitcoin.conf /root/.bitcoin/bitcoin.conf
 
-        # start the btcd daemon
-	/usr/src/gocode/bin/btcd
+        # start the bitcoin daemon
+        /usr/local/bin/bitcoind -conf=/root/.bitcoin/bitcoin.conf
 
 
-Now btcd will connect to some peers and start downloading the blockchain. You can monitor the progress with the folowing command:
-	tail -f /var/log/btcd/
+Bitcoind will connect to some peers and start downloading the blockchain. You can monitor the progress with the folowing command:
 
+	bitcoind getinfo
 
 CREDIT: I based this part of the instruccions on this excelent article -> http://blog.pryds.eu/2014/06/compile-bitcoin-core-on-raspberry-pi.html
 
@@ -266,9 +269,6 @@ CREDIT: I based this part of the instruccions on this excelent article -> http:/
 	python tests/run_data_tests.py
 	vi samples/docs/docs_example.py
 
-	python tests/run_data_tests.py
-	vi samples/docs/docs_example.py
-
 9) Auto-start on boot.
    Make your /etc/rc.local look something like this:
 
@@ -302,7 +302,7 @@ CREDIT: I based this part of the instruccions on this excelent article -> http:/
 Firewall rules
 --------------
 
-Don't forget to forward port 8333 internet traffic to the Raspberry Pi.
+Don't forget to forward traffic on port 8333 to the Raspberry Pi.
 
 
 ASIC USB miner
@@ -327,3 +327,6 @@ REFERENCE: https://github.com/AntMiner/AntGen1
 
 
 Contributing
+------------
+
+Forks, patches and other feedback are welcome.
