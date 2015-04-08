@@ -212,7 +212,7 @@ ln -s /root/raspberry-bitcoin/logrotate.d/bitcoin /etc/logrotate.d/bitcoin
 	cd bitcoin/
 	./autogen.sh
 	./configure --disable-wallet
-	make
+	make -j4
 	# strip will reduce the size of the binary from 42Mb to ~2Mb
 	strip bitcoind
 	make install
