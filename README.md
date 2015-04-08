@@ -17,14 +17,15 @@ Installation
 
 2) Upgrade the system, add base packages, optimize, configure network and expand RAM (installing ZRAM)
 
-	# upgrade the system
-	apt-get update
-	apt-get dist-upgrade
-	apt-get install rpi-update htop iotop usbutils dosfstools bridge-utils iw wpasupplicant
+```
+# upgrade the system
+apt-get update
+apt-get dist-upgrade
+apt-get install rpi-update htop iotop usbutils dosfstools bridge-utils iw wpasupplicant
 
-	# configure automatic updates
-	apt-get install unattended-upgrades
-	echo << EOF >/etc/apt/apt.conf.d/20auto-upgrades
+# configure automatic updates
+apt-get install unattended-upgrades
+echo << EOF >/etc/apt/apt.conf.d/20auto-upgrades
 // Enable the update/upgrade script (0=disable)
 APT::Periodic::Enable "1";
 
@@ -44,8 +45,8 @@ APT::Periodic::Unattended-Upgrade "1";
 APT::Periodic::AutocleanInterval "7";
 EOF
 
-	# network configuration
-	echo << EOF >/etc/network/interfaces
+# network configuration
+echo << EOF >/etc/network/interfaces
 auto lo
 iface lo inet loopback
 
@@ -63,8 +64,11 @@ iface default inet static
 	broadcast 192.168.1.255
 	gateway 192.168.1.1
 EOF
-	# tell the wpa_supplicant to reconfigure itself
-	echo << EOF >/etc/wpa_supplicant/wpa_supplicant.conf
+```
+
+```
+# tell the wpa_supplicant to reconfigure itself
+echo << EOF >/etc/wpa_supplicant/wpa_supplicant.conf
 network={
 ssid="NETGEAR"
 psk="SeCrEt"
@@ -74,52 +78,54 @@ pairwise=CCMP
 auth_alg=OPEN
 }
 EOF
+```
 
-	# log in ram
-	service rsyslog stop
-	echo "tmpfs		/var/log	tmpfs	nosuid,noexec,nodev,mode=0755,size=32M" >>/etc/fstab
-	rm -r /var/log/*
-	mount /var/log
-	service rsyslog start
+```
+# log in ram
+service rsyslog stop
+echo "tmpfs		/var/log	tmpfs	nosuid,noexec,nodev,mode=0755,size=32M" >>/etc/fstab
+rm -r /var/log/*
+mount /var/log
+service rsyslog start
 
-	# /tmp in ram
-	echo "RAMTMP=yes" >> /etc/default/tmpfs
+# /tmp in ram
+echo "RAMTMP=yes" >> /etc/default/tmpfs
 
-	# update the firmware
-	rpi-update
+# update the firmware
+rpi-update
 
-	# Remove the extra tty's
-	sed -i '/[2-6]:23:respawn:\/sbin\/getty 38400 tty[2-6]/s%^%#%g' /etc/inittab
+# Remove the extra tty's
+sed -i '/[2-6]:23:respawn:\/sbin\/getty 38400 tty[2-6]/s%^%#%g' /etc/inittab
 
-	# Optimize / mount
-	#sed -i 's/defaults,noatime/defaults,noatime,nodiratime/g' /etc/fstab
+# Optimize / mount
+#sed -i 's/defaults,noatime/defaults,noatime,nodiratime/g' /etc/fstab
 
-	# Disable IPv6
-	echo "net.ipv6.conf.all.disable_ipv6=1" > /etc/sysctl.d/disableipv6.conf
-	echo 'blacklist ipv6' >> /etc/modprobe.d/blacklist
-	sed -i '/::/s%^%#%g' /etc/hosts
+# Disable IPv6
+echo "net.ipv6.conf.all.disable_ipv6=1" > /etc/sysctl.d/disableipv6.conf
+echo 'blacklist ipv6' >> /etc/modprobe.d/blacklist
+sed -i '/::/s%^%#%g' /etc/hosts
 
-	# cNOOP scheduler is best used with solid state devices such as flash memory.
-	sed -i 's/deadline/noop/g' /boot/cmdline.txt
+# cNOOP scheduler is best used with solid state devices such as flash memory.
+sed -i 's/deadline/noop/g' /boot/cmdline.txt
 
-	# remove syslog
-	# apt-get -y remove --purge rsyslog
+# remove syslog
+# apt-get -y remove --purge rsyslog
 
-	# compile zram module
-	apt-get install linux-headers-rpi-rpfv
+# compile zram module
+apt-get install linux-headers-rpi-rpfv
 
-	# drop the zram script
-	echo << EOF >/etc/init.d/zram
-	#!/bin/bash
-	### BEGIN INIT INFO
-	#Provides: zram
-	#Required-Start:
-	#Required-Stop:
-	#Default-Start: 2 3 4 5
-	#Default-Stop: 0 1 6
-	#Short-Description: Increased Performance In Linux With zRam (Virtual Swap Compressed in RAM)
-	#Description: Adapted for Raspian (Rasberry pi) by eXtremeSHOK.com using https://raw.github.com/gionn/etc/master/init.d/zram
-	### END INIT INFO
+# drop the zram script
+echo << EOF >/etc/init.d/zram
+#!/bin/bash
+### BEGIN INIT INFO
+#Provides: zram
+#Required-Start:
+#Required-Stop:
+#Default-Start: 2 3 4 5
+#Default-Stop: 0 1 6
+#Short-Description: Increased Performance In Linux With zRam (Virtual Swap Compressed in RAM)
+#Description: Adapted for Raspian (Rasberry pi) by eXtremeSHOK.com using https://raw.github.com/gionn/etc/master/init.d/zram
+### END INIT INFO
 	 
 	start() {
 	    mem_total_kb=$(grep MemTotal /proc/meminfo | grep -E --only-matching '[[:digit:]]+')
@@ -159,35 +165,37 @@ EOF
 	        echo "Usage: $0 {start|stop|restart}"
 	        RETVAL=1
 	esac
-	EOF
-	chmod +x /etc/init.d/zram
+EOF
+chmod +x /etc/init.d/zram
 	
-	#add zram.enabled=1 to /boot/cmdline.txt
+#add zram.enabled=1 to /boot/cmdline.txt
 
-	# start on boot disable, rpi official firmware is missing the zram module
-	# update-rc.d zram defaults
+# start on boot disable, rpi official firmware is missing the zram module
+# update-rc.d zram defaults
 
-	# done, reboot
-	reboot
+# done, reboot
+reboot
+```
 
 3) The RAM memory will not be enough, so we are going to add 2GB thumb drive as a swap drive
+```
+# my usb drive is in /dev/sda
+mkswap /dev/sda
+swapon /dev/sda
 
-	# my usb drive is in /dev/sda
-        mkswap /dev/sda
-        swapon /dev/sda
-
-	# mount automatically on boot
-	echo "/dev/sda	none		swap	discard,sw	0	0" >> /etc/fstab
-
+# mount automatically on boot
+echo "/dev/sda	none		swap	discard,sw	0	0" >> /etc/fstab
+```
 
 4) Clone this git repo.
+```
+apt-get install git
+cd /root
+git clone git@github.com:facastagnini/raspberry-bitcoin.git
 
-	apt-get install git
-	cd /root
-	git clone git@github.com:facastagnini/raspberry-bitcoin.git
-
-	# add logrotate rule
-	ln -s /root/raspberry-bitcoin/logrotate.d/bitcoin /etc/logrotate.d/bitcoin
+# add logrotate rule
+ln -s /root/raspberry-bitcoin/logrotate.d/bitcoin /etc/logrotate.d/bitcoin
+```
 
 5) Install Go
 
@@ -226,23 +234,24 @@ Now btcd will connect to some peers and start downloading the blockchain. You ca
 CREDIT: I based this part of the instruccions on this excelent article -> http://blog.pryds.eu/2014/06/compile-bitcoin-core-on-raspberry-pi.html
 
 6) Install CGMiner 
+```
+# install building dependencies
+apt-get install libusb-1.0-0-dev libusb-1.0-0 libcurl4-openssl-dev libncurses5-dev libudev-dev
 
-	# install building dependencies
-	apt-get install libusb-1.0-0-dev libusb-1.0-0 libcurl4-openssl-dev libncurses5-dev libudev-dev
+# install from source
+cd /usr/src
+wget http://ck.kolivas.org/apps/cgminer/cgminer-4.7.0.tar.bz2
+tar xvf cgminer-4.7.0.tar.bz2
+ln -sf /usr/src/cgminer-4.7.0 /usr/src/cgminer
+cd cgminer
+CFLAGS="-O2 -Wall" ./configure --enable-icarus
+make
 
-	# install from source
-	cd /usr/src
-	wget http://ck.kolivas.org/apps/cgminer/cgminer-4.7.0.tar.bz2
-	tar xvf cgminer-4.7.0.tar.bz2
-	ln -sf /usr/src/cgminer-4.7.0 /usr/src/cgminer
-	cd cgminer
-	CFLAGS="-O2 -Wall" ./configure --enable-icarus
-	make
-
-	# setup the bitcoin config file
-	cp /root/raspberry-bitcoin/cgminer.conf /etc/cgminer.conf
-	# edit the configuration add the pool url, user and password. If you are mining 'solo' point to your local bitcoind node
-	vi /etc/cgminer.conf 
+# setup the bitcoin config file
+cp /root/raspberry-bitcoin/cgminer.conf /etc/cgminer.conf
+# edit the configuration add the pool url, user and password. If you are mining 'solo' point to your local bitcoind node
+vi /etc/cgminer.conf 
+```
 
 7) Install adafruit goodies
 
@@ -251,23 +260,25 @@ CREDIT: I based this part of the instruccions on this excelent article -> http:/
 7.2) Adafruit 16x2 Character LCD: https://learn.adafruit.com/adafruit-16x2-character-lcd-plus-keypad-for-raspberry-pi/overview
 
 7.3) Install PiMiner
-
-	cd /usr/src
-	git clone https://github.com/adafruit/PiMiner.git
+```
+cd /usr/src
+git clone https://github.com/adafruit/PiMiner.git
+```
 
 8) Monitoring
+```
+cd /usr/src
+# install google python library
+wget https://gdata-python-client.googlecode.com/files/gdata-2.0.18.tar.gz
+tar xvf gdata-2.0.18.tar.gz
+cd gdata-2.0.18
+python setup.py install
+python tests/run_data_tests.py
+vi samples/docs/docs_example.py
 
-	cd /usr/src
-	# install google python library
-	wget https://gdata-python-client.googlecode.com/files/gdata-2.0.18.tar.gz
-	tar xvf gdata-2.0.18.tar.gz
-	cd gdata-2.0.18
-	python setup.py install
-	python tests/run_data_tests.py
-	vi samples/docs/docs_example.py
-
-	python tests/run_data_tests.py
-	vi samples/docs/docs_example.py
+python tests/run_data_tests.py
+vi samples/docs/docs_example.py
+```
 
 9) Auto-start on boot.
    Make your /etc/rc.local look something like this:
@@ -302,7 +313,7 @@ CREDIT: I based this part of the instruccions on this excelent article -> http:/
 Firewall rules
 --------------
 
-Don't forget to forward port 8333 internet traffic to the Raspberry Pi.
+Don't forget to forward port TCP/8333 internet traffic to the Raspberry Pi.
 
 
 ASIC USB miner
