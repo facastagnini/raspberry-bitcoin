@@ -25,7 +25,7 @@ apt-get -y install rpi-update htop iotop usbutils dosfstools bridge-utils iw wpa
 
 # configure automatic updates
 apt-get install unattended-upgrades
-echo << EOF >/etc/apt/apt.conf.d/20auto-upgrades
+cat << EOF >/etc/apt/apt.conf.d/20auto-upgrades
 // Enable the update/upgrade script (0=disable)
 APT::Periodic::Enable "1";
 
@@ -68,7 +68,7 @@ EOF
 
 ```
 # tell the wpa_supplicant to reconfigure itself
-echo << EOF >/etc/wpa_supplicant/wpa_supplicant.conf
+cat << EOF >/etc/wpa_supplicant/wpa_supplicant.conf
 network={
 ssid="NETGEAR"
 psk="SeCrEt"
@@ -115,7 +115,7 @@ sed -i 's/deadline/noop/g' /boot/cmdline.txt
 apt-get -y install linux-headers-rpi-rpfv
 
 # drop the zram script
-echo << EOF >/etc/init.d/zram
+cat << EOF >/etc/init.d/zram
 #!/bin/bash
 ### BEGIN INIT INFO
 #Provides: zram
