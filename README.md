@@ -197,41 +197,42 @@ git clone git@github.com:facastagnini/raspberry-bitcoin.git
 ln -s /root/raspberry-bitcoin/logrotate.d/bitcoin /etc/logrotate.d/bitcoin
 ```
 
-5) Install Go
-
-	apt-get install -y mercurial gcc libc6-dev
-	hg clone -u default https://code.google.com/p/go /usr/src/go
-	cd /usr/src/go/src
-	./all.bash
-	#./make.bash
-
-	echo "export GOROOT=/usr/src/go"      > /etc/profile.d/go.sh
-	echo "export GOPATH=/usr/src/gocode" >> /etc/profile.d/go.sh
-	echo "export PATH=$PATH:$GOROOT/bin" >> /etc/profile.d/go.sh
-	chmod 0555 /etc/profile.d/go.sh
-
-6) Install btcd and setup the full node.
+5) Setup the full node.
    A full node is bla bla bla and provides this this and this and help Bitcoin in this way.
 
+   Since the Raspbian repositories host an archaic version of Bitcoin Core (the original Bitcoin client), we will have to compile from source.
 
-	# to install
-	go get github.com/conformal/btcd/...
-	# later on, to upgrade
-	go get -u github.com/conformal/btcd/...
+```
+	# install building dependencies
+	apt-get install build-essential autoconf libssl-dev libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev libboost-system-dev libboost-test-dev libboost-thread-dev
+
+	# install Bitcoin Core
+	cd /usr/src
+	git clone -b 0.10 https://github.com/bitcoin/bitcoin.git
+	cd bitcoin/
+	./autogen.sh
+	./configure --disable-wallet
+	make
+	# strip will reduce the size of the binary from 42Mb to ~2Mb
+	strip bitcoind
+	make install
 
         # setup the bitcoin config file
-        mkdir /root/.btcd
-        ln /root/raspberry-bitcoin/btcd.conf /root/.btcd/btcd.conf
+        mkdir /root/.bitcoin
+        ln /root/raspberry-bitcoin/bitcoin.conf /root/.bitcoin/bitcoin.conf
 
-        # start the btcd daemon
-	/usr/src/gocode/bin/btcd
+        # start the bitcoin daemon
+        /usr/local/bin/bitcoind -conf=/root/.bitcoin/bitcoin.conf
+```
 
+Bitcoind will connect to some peers and start downloading the blockchain. You can monitor the progress with the folowing command:
 
-Now btcd will connect to some peers and start downloading the blockchain. You can monitor the progress with the folowing command:
-	tail -f /var/log/btcd/
-
+```
+bitcoind getinfo
+```
 
 CREDIT: I based this part of the instruccions on this excelent article -> http://blog.pryds.eu/2014/06/compile-bitcoin-core-on-raspberry-pi.html
+
 
 6) Install CGMiner 
 ```
