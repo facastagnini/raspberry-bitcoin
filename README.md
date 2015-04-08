@@ -17,7 +17,7 @@ Installation
 
 2) Upgrade the system, add base packages, optimize, configure network and expand RAM (installing ZRAM)
 
-```
+```bash
 # upgrade the system
 apt-get update
 apt-get dist-upgrade
@@ -80,7 +80,7 @@ auth_alg=OPEN
 EOF
 ```
 
-```
+```bash
 # log in ram
 service rsyslog stop
 echo "tmpfs		/var/log	tmpfs	nosuid,noexec,nodev,mode=0755,size=32M" >>/etc/fstab
@@ -178,7 +178,7 @@ reboot
 ```
 
 3) The RAM memory will not be enough, so we are going to add 2GB thumb drive as a swap drive
-```
+```bash
 # my usb drive is in /dev/sda
 mkswap /dev/sda
 swapon /dev/sda
@@ -188,7 +188,7 @@ echo "/dev/sda	none		swap	discard,sw	0	0" >> /etc/fstab
 ```
 
 4) Clone this git repo.
-```
+```bash
 apt-get install git
 cd /root
 git clone git@github.com:facastagnini/raspberry-bitcoin.git
@@ -202,7 +202,7 @@ ln -s /root/raspberry-bitcoin/logrotate.d/bitcoin /etc/logrotate.d/bitcoin
 
    Since the Raspbian repositories host an archaic version of Bitcoin Core (the original Bitcoin client), we will have to compile from source.
 
-```
+```bash
 	# install building dependencies
 	apt-get install build-essential autoconf libssl-dev libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev libboost-system-dev libboost-test-dev libboost-thread-dev
 
@@ -227,7 +227,7 @@ ln -s /root/raspberry-bitcoin/logrotate.d/bitcoin /etc/logrotate.d/bitcoin
 
 Bitcoind will connect to some peers and start downloading the blockchain. You can monitor the progress with the folowing command:
 
-```
+```bash
 bitcoind getinfo
 ```
 
@@ -235,7 +235,7 @@ CREDIT: I based this part of the instruccions on this excelent article -> http:/
 
 
 6) Install CGMiner 
-```
+```bash
 # install building dependencies
 apt-get install libusb-1.0-0-dev libusb-1.0-0 libcurl4-openssl-dev libncurses5-dev libudev-dev
 
@@ -261,13 +261,13 @@ vi /etc/cgminer.conf
 7.2) Adafruit 16x2 Character LCD: https://learn.adafruit.com/adafruit-16x2-character-lcd-plus-keypad-for-raspberry-pi/overview
 
 7.3) Install PiMiner
-```
+```bash
 cd /usr/src
 git clone https://github.com/adafruit/PiMiner.git
 ```
 
 8) Monitoring
-```
+```bash
 cd /usr/src
 # install google python library
 wget https://gdata-python-client.googlecode.com/files/gdata-2.0.18.tar.gz
@@ -283,7 +283,7 @@ vi samples/docs/docs_example.py
 
 9) Auto-start on boot.
    Make your /etc/rc.local look something like this:
-
+```bash
 	#!/bin/sh -e
 	#
 	# rc.local
@@ -308,7 +308,7 @@ vi samples/docs/docs_example.py
 	nohup /usr/src/cgminer/cgminer --config /etc/cgminer.conf >/dev/null 2>&1&
 	
 	exit 0
-
+```
 
 
 Firewall rules
