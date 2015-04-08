@@ -46,7 +46,7 @@ APT::Periodic::AutocleanInterval "7";
 EOF
 
 # network configuration
-echo << EOF >/etc/network/interfaces
+cat << EOF >/etc/network/interfaces
 auto lo
 iface lo inet loopback
 
