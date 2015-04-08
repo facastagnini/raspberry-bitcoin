@@ -20,8 +20,8 @@ Installation
 ```bash
 # upgrade the system
 apt-get update
-apt-get dist-upgrade
-apt-get install rpi-update htop iotop usbutils dosfstools bridge-utils iw wpasupplicant
+apt-get -y dist-upgrade
+apt-get -y install rpi-update htop iotop usbutils dosfstools bridge-utils iw wpasupplicant
 
 # configure automatic updates
 apt-get install unattended-upgrades
@@ -112,7 +112,7 @@ sed -i 's/deadline/noop/g' /boot/cmdline.txt
 # apt-get -y remove --purge rsyslog
 
 # compile zram module
-apt-get install linux-headers-rpi-rpfv
+apt-get -y install linux-headers-rpi-rpfv
 
 # drop the zram script
 echo << EOF >/etc/init.d/zram
@@ -189,7 +189,7 @@ echo "/dev/sda	none		swap	discard,sw	0	0" >> /etc/fstab
 
 4) Clone this git repo.
 ```bash
-apt-get install git
+apt-get -y install git
 cd /root
 git clone git@github.com:facastagnini/raspberry-bitcoin.git
 
@@ -204,7 +204,7 @@ ln -s /root/raspberry-bitcoin/logrotate.d/bitcoin /etc/logrotate.d/bitcoin
 
 ```bash
 	# install building dependencies
-	apt-get install build-essential autoconf libssl-dev libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev libboost-system-dev libboost-test-dev libboost-thread-dev
+	apt-get -y install build-essential autoconf libssl-dev libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev libboost-system-dev libboost-test-dev libboost-thread-dev
 
 	# install Bitcoin Core
 	cd /usr/src
@@ -237,7 +237,7 @@ CREDIT: I based this part of the instruccions on this excelent article -> http:/
 6) Install CGMiner 
 ```bash
 # install building dependencies
-apt-get install libusb-1.0-0-dev libusb-1.0-0 libcurl4-openssl-dev libncurses5-dev libudev-dev
+apt-get -y install libusb-1.0-0-dev libusb-1.0-0 libcurl4-openssl-dev libncurses5-dev libudev-dev
 
 # install from source
 cd /usr/src
