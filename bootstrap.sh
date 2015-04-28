@@ -8,9 +8,11 @@ install_dependencies() {
   sudo apt-get -y install git build-essential libyaml-dev libssl-dev
 }
 
-#clone_repo() {
-#  git clone git@github.com:facastagnini/raspberry-bitcoin.git
-#}
+clone_repo() {
+  pushd /root
+  git clone git@github.com:facastagnini/raspberry-bitcoin.git
+  popd
+}
 
 install_ruby() {
   # remove outdated ruby
@@ -29,7 +31,7 @@ install_ruby() {
 
 install_chef() {
   gem install chef --no-ri --no-rdoc
-  #chef-server --version  
+  #chef-client --version  
 }
 
 
@@ -38,6 +40,6 @@ apt-get update
 
 install_dependencies
 install_ruby
-#install_chef
+install_chef
 #clone_repo
 #run_chef_solo
