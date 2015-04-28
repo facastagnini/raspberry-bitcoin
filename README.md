@@ -20,7 +20,7 @@ Installation
 3) Cook the raspberry pi (reference: http://everydaytinker.com/raspberry-pi/installing-chef-client-on-a-raspberry-pi-2-model-b/)
 
 ```bash
-sudo apt-get update && sudo apt-get -y install git && git clone git@github.com:facastagnini/raspberry-bitcoin.git && bash raspberry-bitcoin/bootstrap.sh
+sudo bash <(curl -s https://raw.githubusercontent.com/facastagnini/raspberry-bitcoin/master/bootstrap.sh)
 ```
 
 OLD STUFF
