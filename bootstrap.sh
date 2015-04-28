@@ -3,6 +3,8 @@
 # References:
 #             http://everydaytinker.com/raspberry-pi/installing-chef-client-on-a-raspberry-pi-2-model-b/
 
+set -eux
+
 
 install_dependencies() {
   sudo apt-get -y install git build-essential libyaml-dev libssl-dev
