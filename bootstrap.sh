@@ -2,7 +2,6 @@
 # Bootstrap the raspberry pi: install chef client and execute chef-solo
 # References:
 #             http://everydaytinker.com/raspberry-pi/installing-chef-client-on-a-raspberry-pi-2-model-b/
-#             https://gist.github.com/blacktm/8302741#file-install_ruby_rpi-sh
 
 
 install_dependencies() {
