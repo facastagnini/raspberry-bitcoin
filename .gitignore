@@ -6,7 +6,20 @@
 .chef/*.pem
 .chef/encrypted_data_bag_secret
 
-*.swp
-*.swo
-.DS_Store
+*~
+*#
+.#*
+\#*#
+.*.sw[a-z]
+*.un~
+pkg/
+
 .vagrant
+
+# Bundler
+Gemfile.lock
+bin/*
+.bundle/*
+
+.kitchen/
+.kitchen.local.yml
