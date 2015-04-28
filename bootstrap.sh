@@ -6,7 +6,7 @@
 
 
 install_dependencies() {
-  sudo apt-get -y install git
+  sudo apt-get -y install git build-essential libyaml-dev libssl-dev
 }
 
 #clone_repo() {
