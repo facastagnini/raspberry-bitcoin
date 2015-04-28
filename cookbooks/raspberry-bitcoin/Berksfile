@@ -1,0 +1,5 @@
+source "https://supermarket.chef.io"
+
+metadata
+
+cookbook 'raspberry-pi', git: 'git@github.com:Padgett/chef-raspberry-pi.git'

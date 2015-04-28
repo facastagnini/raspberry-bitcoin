@@ -1,0 +1,7 @@
+name             'raspberry-bitcoin'
+maintainer       'YOUR_NAME'
+maintainer_email 'YOUR_EMAIL'
+license          'All rights reserved'
+description      'Installs/Configures raspberry-bitcoin'
+long_description 'Installs/Configures raspberry-bitcoin'
+version          '0.1.0'

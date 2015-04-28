@@ -1,17 +1,29 @@
 Raspberry-Bitcoin
 =================
 
-== THIS IS WORK IN PROGRESS==
+THIS IS WORK IN PROGRESS: I am writing chef code to automate/manage the installation.
 
-It is NOT possible to run a full node on the raspberry pi using Bitcoin Core. Not enought CPU, neither RAM.
+This is an attempt to build a full bitcoin node on a Raspberry Pi 2 B (4 cores, 1GB ram).
 
-This is an attempt to build a full node with btcd (https://github.com/conformal/btcd) on a Raspberry Pi B 512MB.
+It is NOT possible to run a full node on the raspberry pi 1 B. Not enought CPU, neither RAM.
 
 DISCLAIMER: This is a personal project to learn about Bitcoin and how to colaborate to keep the distribuited network strong and healthy. This is not an attempt to make money.
 
 
 Installation
 ------------
+
+1) Flash a clean raspbian onto an SD card
+
+2) Boot the raspberry pi, finish the installation and move the rootfs to an external usb hard drive (LINK).
+
+3) Cook the raspberry pi
+
+```bash
+sudo apt-get update && sudo apt-get -y install git && git clone git@github.com:facastagnini/raspberry-bitcoin.git && bash raspberry-bitcoin/bootstrap.sh
+```
+
+OLD STUFF
 
 1) Install Raspbian on a 32Gb or bigger SD card. (There is a guide here http://www.raspberrypi.org/documentation/installation/installing-images/README.md)
 
@@ -21,7 +33,7 @@ Installation
 # upgrade the system
 apt-get update
 apt-get -y dist-upgrade
-apt-get -y install rpi-update htop iotop usbutils dosfstools bridge-utils iw wpasupplicant
+apt-get -y install rpi-update htop iotop usbutils dosfstools bridge-utils iw wpasupplicant vim ifmetric
 
 # configure automatic updates
 apt-get install unattended-upgrades
@@ -50,11 +62,13 @@ cat << EOF >/etc/network/interfaces
 auto lo
 iface lo inet loopback
 
-auto ehto0
+auto eth0
 iface eth0 inet manual
+#    metric 0
 
 allow-hotplug wlan0
 iface wlan0 inet manual
+#    metric 1
 	wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
 
 iface default inet static
@@ -127,44 +141,44 @@ cat << EOF >/etc/init.d/zram
 #Description: Adapted for Raspian (Rasberry pi) by eXtremeSHOK.com using https://raw.github.com/gionn/etc/master/init.d/zram
 ### END INIT INFO
 	 
-	start() {
-	    mem_total_kb=$(grep MemTotal /proc/meminfo | grep -E --only-matching '[[:digit:]]+')
-	 
-	    modprobe zram
-	 
-	    sleep 1
-	    #only using 50% of system memory, comment the line below to use 100% of system memory
-	    mem_total_kb=$((mem_total_kb/2))
-	 
-	    echo $((mem_total_kb * 1024)) > /sys/block/zram0/disksize
-	 
-	    mkswap /dev/zram0
-	 
-	    swapon -p 100 /dev/zram0
-	}
-	 
-	stop() {
-	    swapoff /dev/zram0
-	    sleep 1
-	    rmmod zram
-	}
-	 
-	case "$1" in
-	    start)
-	        start
-	        ;;
-	    stop)
-	        stop
-	        ;;
-	    restart)
-	        stop
-	        sleep 3
-	        start
-	        ;;
-	    *)
-	        echo "Usage: $0 {start|stop|restart}"
-	        RETVAL=1
-	esac
+start() {
+    mem_total_kb=$(grep MemTotal /proc/meminfo | grep -E --only-matching '[[:digit:]]+')
+ 
+    modprobe zram
+ 
+    sleep 1
+    #only using 50% of system memory, comment the line below to use 100% of system memory
+    mem_total_kb=$((mem_total_kb/2))
+ 
+    echo $((mem_total_kb * 1024)) > /sys/block/zram0/disksize
+ 
+    mkswap /dev/zram0
+ 
+    swapon -p 100 /dev/zram0
+}
+ 
+stop() {
+    swapoff /dev/zram0
+    sleep 1
+    rmmod zram
+}
+ 
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        stop
+        sleep 3
+        start
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        RETVAL=1
+esac
 EOF
 chmod +x /etc/init.d/zram
 	
@@ -203,26 +217,26 @@ ln -s /root/raspberry-bitcoin/logrotate.d/bitcoin /etc/logrotate.d/bitcoin
    Since the Raspbian repositories host an archaic version of Bitcoin Core (the original Bitcoin client), we will have to compile from source.
 
 ```bash
-	# install building dependencies
-	apt-get -y install build-essential autoconf libssl-dev libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev libboost-system-dev libboost-test-dev libboost-thread-dev
+# install building dependencies
+apt-get -y install build-essential autoconf libssl-dev libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev libboost-system-dev libboost-test-dev libboost-thread-dev libtool
 
-	# install Bitcoin Core
-	cd /usr/src
-	git clone -b 0.10 https://github.com/bitcoin/bitcoin.git
-	cd bitcoin/
-	./autogen.sh
-	./configure --disable-wallet
-	make -j4
-	# strip will reduce the size of the binary from 42Mb to ~2Mb
-	strip bitcoind
-	make install
+# install Bitcoin Core
+cd /usr/src
+git clone -b 0.10 https://github.com/bitcoin/bitcoin.git
+cd bitcoin/
+./autogen.sh
+./configure --disable-wallet
+make -j4
+# strip will reduce the size of the binary from 42Mb to ~2Mb
+strip bitcoind
+make install
 
-        # setup the bitcoin config file
-        mkdir /root/.bitcoin
-        ln /root/raspberry-bitcoin/bitcoin.conf /root/.bitcoin/bitcoin.conf
+# setup the bitcoin config file
+mkdir /root/.bitcoin
+ln /root/raspberry-bitcoin/bitcoin.conf /root/.bitcoin/bitcoin.conf
 
-        # start the bitcoin daemon
-        /usr/local/bin/bitcoind -conf=/root/.bitcoin/bitcoin.conf
+# start the bitcoin daemon
+/usr/local/bin/bitcoind -conf=/root/.bitcoin/bitcoin.conf
 ```
 
 Bitcoind will connect to some peers and start downloading the blockchain. You can monitor the progress with the folowing command:
