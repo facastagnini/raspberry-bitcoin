@@ -54,7 +54,7 @@ clone_repo() {
 }
 
 run_chef() {
-  chef-client -z -o raspberry-bitcoin
+  chef-client --local -o raspberry-bitcoin
 }
 
 
