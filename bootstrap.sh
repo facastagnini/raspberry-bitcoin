@@ -14,6 +14,13 @@ install_dependencies() {
   sudo apt-get -y install git build-essential libyaml-dev libssl-dev
 }
 
+increase_swap() {
+  rm /etc/dphys-swapfile
+  dphys-swapfile swapoff
+  dphys-swapfile setup
+  dphys-swapfile swapon
+}
+
 install_ruby() {
   # remove outdated ruby
   apt-get purge ruby1.9 ruby1.8 -y
