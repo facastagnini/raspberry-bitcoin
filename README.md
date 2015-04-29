@@ -126,6 +126,7 @@ sed -i 's/deadline/noop/g' /boot/cmdline.txt
 # apt-get -y remove --purge rsyslog
 
 # compile zram module
+# zram: https://github.com/raspberrypi/linux/issues/179#issuecomment-14164706
 apt-get -y install linux-headers-rpi-rpfv
 
 # drop the zram script
