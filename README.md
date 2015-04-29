@@ -1,6 +1,11 @@
 Raspberry-Bitcoin
 =================
 
+[![Build Status](https://secure.travis-ci.org/facastagnini/raspberry-bitcoin.svg?branch=master)](https://travis-ci.org/facastagnini/raspberry-bitcoin)
+[![Code Climate](https://codeclimate.com/github/facastagnini/raspberry-bitcoin.svg)](https://codeclimate.com/github/facastagnini/raspberry-bitcoin)
+[![Test Coverage](https://codeclimate.com/github/facastagnini/raspberry-bitcoin/coverage.svg)](https://codeclimate.com/github/facastagnini/raspberry-bitcoin)
+
+
 THIS IS WORK IN PROGRESS: I am writing chef code to automate/manage the installation.
 
 This is an attempt to build a full bitcoin node on a Raspberry Pi 2 B (4 cores, 1GB ram).
