@@ -53,7 +53,9 @@ clone_repo() {
   popd
 }
 
-
+run_chef() {
+  chef-client -z -o raspberry-bitcoin
+}
 
 
 apt_stuff
@@ -62,7 +64,7 @@ increase_swap
 install_ruby
 install_chef
 clone_repo
-#run_chef_solo
+run_chef
 
 
 echo "Installation complete. You should reboot now."
