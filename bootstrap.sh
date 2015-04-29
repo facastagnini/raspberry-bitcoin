@@ -1,8 +1,5 @@
 #/usr/bin/env bash
 # Bootstrap the raspberry pi: install chef client and execute chef-solo
-# References:
-#             http://everydaytinker.com/raspberry-pi/installing-chef-client-on-a-raspberry-pi-2-model-b/
-
 set -eux
 
 apt_stuff() {
@@ -22,6 +19,8 @@ increase_swap() {
 }
 
 install_ruby() {
+  # reference: http://everydaytinker.com/raspberry-pi/installing-chef-client-on-a-raspberry-pi-2-model-b/
+
   # remove outdated ruby
   apt-get purge ruby1.9 ruby1.8 -y
   apt-get autoremove --purge -y
@@ -53,8 +52,17 @@ clone_repo() {
   popd
 }
 
+run_berks() {
+  pushd /usr/src/raspberry-bitcoin
+  berks install --except solo --berksfile=./cookbooks/raspberry-bitcoin/Berksfile
+  berks update  --except solo --berksfile=./cookbooks/raspberry-bitcoin/Berksfile
+  rm -rf cookbooks
+  berks vendor  --except solo --berksfile=./cookbooks/raspberry-bitcoin/Berksfile cookbooks
+  popd
+}
+
 run_chef() {
-  chef-client --local -o raspberry-bitcoin
+  chef-client --local-mode -o raspberry-bitcoin
 }
 
 
@@ -64,6 +72,7 @@ increase_swap
 install_ruby
 install_chef
 clone_repo
+run_berks
 run_chef
 
 
