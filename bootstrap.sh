@@ -11,7 +11,7 @@ apt_stuff() {
 }
 
 install_dependencies() {
-  sudo apt-get -y install git build-essential libyaml-dev libssl-dev
+  sudo apt-get -y install git build-essential libyaml-dev libssl-dev autoconf
 }
 
 increase_swap() {
