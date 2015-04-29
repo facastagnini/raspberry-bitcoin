@@ -11,11 +11,10 @@ apt_stuff() {
 }
 
 install_dependencies() {
-  sudo apt-get -y install git build-essential libyaml-dev libssl-dev autoconf
+  sudo apt-get -y install git build-essential libyaml-dev libssl-dev autoconf libgecode-dev dphys-swapfile
 }
 
 increase_swap() {
-  which dphys-swapfile || apt-get -y install dphys-swapfile
   echo "CONF_SWAPSIZE=4096" > /etc/dphys-swapfile
   dphys-swapfile swapoff
   dphys-swapfile setup
@@ -40,8 +39,12 @@ install_ruby() {
 
 install_chef() {
   which chef-client || gem install chef --no-ri --no-rdoc
+
+  # use the system version, instead of downloading the source and building its own copy.
+  gem list --local | grep dep-selector-libgecode || USE_SYSTEM_GECODE=1 gem install dep-selector-libgecode
+
+  # install berks
   which berks || gem install berkshelf --no-ri --no-rdoc
-  #chef-client --version  
 }
 
 clone_repo() {
