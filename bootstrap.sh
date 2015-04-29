@@ -54,10 +54,10 @@ clone_repo() {
 
 run_berks() {
   pushd /usr/src/raspberry-bitcoin
-  berks install --except solo --berksfile=./cookbooks/raspberry-bitcoin/Berksfile
-  berks update  --except solo --berksfile=./cookbooks/raspberry-bitcoin/Berksfile
-  rm -rf cookbooks
-  berks vendor  --except solo --berksfile=./cookbooks/raspberry-bitcoin/Berksfile cookbooks
+  berks install --berksfile=./cookbooks/raspberry-bitcoin/Berksfile
+  berks update  --berksfile=./cookbooks/raspberry-bitcoin/Berksfile
+  rm -rf berks-cookbooks
+  berks vendor  --berksfile=./cookbooks/raspberry-bitcoin/Berksfile
   popd
 }
 

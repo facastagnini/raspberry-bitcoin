@@ -17,6 +17,7 @@ pkg/
 .vagrant
 .cache
 nodes
+berks-cookbooks
 
 # Bundler
 Gemfile.lock

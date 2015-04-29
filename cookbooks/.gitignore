@@ -1,7 +1,0 @@
-###
-# Ignore berks vendor cookbooks
-###
-
-!.gitignore
-!raspberry-bitcoin
-*

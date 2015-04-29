@@ -2,4 +2,4 @@ source "https://supermarket.chef.io"
 
 metadata
 
-cookbook 'raspberry-pi', git: 'https://github.com/Padgett/chef-raspberry-pi.git', group: 'solo'
+cookbook 'raspberry-pi', git: 'https://github.com/Padgett/chef-raspberry-pi.git'
