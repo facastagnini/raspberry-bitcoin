@@ -15,7 +15,8 @@ install_dependencies() {
 }
 
 increase_swap() {
-  rm /etc/dphys-swapfile
+  which dphys-swapfile || apt-get -y install dphys-swapfile
+  echo "CONF_SWAPSIZE=4096" > /etc/dphys-swapfile
   dphys-swapfile swapoff
   dphys-swapfile setup
   dphys-swapfile swapon
@@ -54,6 +55,7 @@ clone_repo() {
 
 apt_stuff
 install_dependencies
+increase_swap
 install_ruby
 install_chef
 clone_repo

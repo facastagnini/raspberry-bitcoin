@@ -352,4 +352,8 @@ antminer_clock_settings:
 REFERENCE: https://github.com/AntMiner/AntGen1
 
 
-Contributing
+Contributing and Development
+----------------------------
+
+Bugs and PRs are welcome!
+I develope and test with vagrant, then I test on a fresh raspberry pi.
