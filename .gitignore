@@ -15,6 +15,7 @@
 pkg/
 
 .vagrant
+.cache
 
 # Bundler
 Gemfile.lock
