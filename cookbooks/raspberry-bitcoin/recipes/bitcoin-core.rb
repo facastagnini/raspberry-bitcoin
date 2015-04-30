@@ -6,11 +6,13 @@
 #
 # TODO: contribute to https://github.com/infertux/chef-bitcoin/
 #
+# Since the Raspbian repositories host an archaic version 
+# of Bitcoin Core (the original Bitcoin client), we will have to compile from source.
 
 ####################
 # install compiling tools
 base_packages = [
-	'build-essential', 'autoconf', 'libssl-dev', 'libboost-dev', 
+	'build-essential', 'autoconf', 'libssl-dev', 'libboost-dev', 'pkg-config',
 	'libboost-chrono-dev', 'libboost-filesystem-dev', 'libboost-program-options-dev', 
 	'libboost-system-dev', 'libboost-test-dev', 'libboost-thread-dev', 'libtool']
 base_packages.each do |base_pkg|
