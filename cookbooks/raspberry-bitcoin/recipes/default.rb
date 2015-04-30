@@ -6,7 +6,7 @@
 #
 #
 
-#include_recipe 'apt'
+# include_recipe 'apt'
 include_recipe 'apt::unattended-upgrades'
 include_recipe 'ntp'
 include_recipe 'timezone-ii'
@@ -20,5 +20,4 @@ base_packages.each do |base_pkg|
 end
 ####################
 
-#include_recipe 'raspberry-bitcoin::bitcoin-core'
 include_recipe 'bitcoin::source'
