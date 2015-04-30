@@ -40,7 +40,7 @@ end
 # setup the bitcoin config file
 directory /root/.bitcoin
 
-template "/etc/bitcoin/bitcoin.conf" do
+template "/root/.bitcoin/bitcoin.conf" do
   mode "0600"
   action :create_if_missing
 end
