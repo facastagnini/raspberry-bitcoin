@@ -20,4 +20,4 @@ base_packages.each do |base_pkg|
 end
 ####################
 
-include_recipe 'raspberry-bitcoin::bitcoin-core'
+#include_recipe 'raspberry-bitcoin::bitcoin-core'

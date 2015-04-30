@@ -194,40 +194,16 @@ reboot
 
 
 5) Setup the full node.
-   A full node is bla bla bla and provides this this and this and help Bitcoin in this way.
-
-   Since the Raspbian repositories host an archaic version of Bitcoin Core (the original Bitcoin client), we will have to compile from source.
-
-```bash
-# install building dependencies
-apt-get -y install build-essential autoconf libssl-dev libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev libboost-system-dev libboost-test-dev libboost-thread-dev libtool
-
-# install Bitcoin Core
-cd /usr/src
-git clone -b 0.10 https://github.com/bitcoin/bitcoin.git
-cd bitcoin/
-./autogen.sh
-./configure --disable-wallet
-make -j4
-# strip will reduce the size of the binary from 42Mb to ~2Mb
-strip bitcoind
-make install
-
-# setup the bitcoin config file
-mkdir /root/.bitcoin
-ln /root/raspberry-bitcoin/bitcoin.conf /root/.bitcoin/bitcoin.conf
 
 # start the bitcoin daemon
-/usr/local/bin/bitcoind -conf=/root/.bitcoin/bitcoin.conf
+/usr/local/bin/bitcoind -conf=/root/.bitcoin/bitcoin.conf 
 ```
 
 Bitcoind will connect to some peers and start downloading the blockchain. You can monitor the progress with the folowing command:
 
 ```bash
-bitcoind getinfo
+bitcoin-cli getinfo
 ```
-
-CREDIT: I based this part of the instruccions on this excelent article -> http://blog.pryds.eu/2014/06/compile-bitcoin-core-on-raspberry-pi.html
 
 
 6) Install CGMiner 

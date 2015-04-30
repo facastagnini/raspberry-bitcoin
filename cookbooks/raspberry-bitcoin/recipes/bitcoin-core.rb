@@ -10,7 +10,7 @@
 # of Bitcoin Core (the original Bitcoin client), we will have to compile from source.
 
 ####################
-# install compiling tools
+# install dependencies
 base_packages = [
 	'build-essential', 'autoconf', 'libssl-dev', 'libboost-dev', 'pkg-config',
 	'libboost-chrono-dev', 'libboost-filesystem-dev', 'libboost-program-options-dev', 
@@ -34,7 +34,7 @@ bash "install_program" do
   cwd "/usr/src"
   code <<-EOH
     tar -zxf bitcoin-#{version}.zip
-    (cd bitcoin-#{version}/ && ./autogen.sh && ./configure --disable-wallet && make -j4 && strip bitcoind && make install)
+    (cd bitcoin-#{version}/ && ./autogen.sh && ./configure --disable-wallet --without-gui && make -j4 && strip bitcoind && make install)
   EOH
   action :nothing
 end
