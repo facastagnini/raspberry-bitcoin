@@ -14,5 +14,7 @@ gem 'berkshelf'
 #   gem "vagrant-omnibus", github: "schisamo/vagrant-omnibus"
 # end
 
-gem "test-kitchen"
-gem "kitchen-vagrant"
+gem 'test-kitchen'
+gem 'kitchen-vagrant'
+#gem 'codeclimate-test-reporter', group: :test, require: nil
+#gem 'rspec-shell-expectations'

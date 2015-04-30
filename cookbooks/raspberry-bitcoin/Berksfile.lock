@@ -1,0 +1,12 @@
+DEPENDENCIES
+  raspberry-bitcoin
+    path: .
+    metadata: true
+  raspberry-pi
+    git: https://github.com/Padgett/chef-raspberry-pi.git
+    revision: 6c2bdcbb06f29148e50d8295e3337f165d1e9d5d
+
+GRAPH
+  raspberry-bitcoin (0.1.0)
+    raspberry-pi (>= 0.0.0)
+  raspberry-pi (0.2.0)
