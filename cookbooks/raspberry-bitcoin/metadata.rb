@@ -8,4 +8,8 @@ version          '0.1.0'
 issues_url       'https://github.com/facastagnini/raspberry-bitcoin/issues'
 source_url       'https://github.com/facastagnini/raspberry-bitcoin'
 
+depends 'apt'
+depends 'locale'
+depends 'timezone-ii'
+depends 'ntp'
 depends 'raspberry-pi'

@@ -7,6 +7,14 @@ DEPENDENCIES
     revision: 6c2bdcbb06f29148e50d8295e3337f165d1e9d5d
 
 GRAPH
+  apt (2.7.0)
+  locale (1.0.2)
+  ntp (1.8.2)
   raspberry-bitcoin (0.1.0)
+    apt (>= 0.0.0)
+    locale (>= 0.0.0)
+    ntp (>= 0.0.0)
     raspberry-pi (>= 0.0.0)
+    timezone-ii (>= 0.0.0)
   raspberry-pi (0.2.0)
+  timezone-ii (0.2.0)

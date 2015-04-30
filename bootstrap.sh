@@ -48,21 +48,31 @@ install_chef() {
 
 clone_repo() {
   pushd /usr/src
-  test -d raspberry-bitcoin || git clone https://github.com/facastagnini/raspberry-bitcoin.git
+  if test -d raspberry-bitcoin
+  then
+    pushd raspberry-bitcoin
+    git pull
+    popd
+  else
+    git clone https://github.com/facastagnini/raspberry-bitcoin.git
+  fi
   popd
 }
 
 run_berks() {
   pushd /usr/src/raspberry-bitcoin
+  #rm -rf ~/.chef/local-mode-cache/cache/cookbooks/raspberry-bitcoin
+  rm -rf berks-cookbooks
   berks install --berksfile=./cookbooks/raspberry-bitcoin/Berksfile
   berks update  --berksfile=./cookbooks/raspberry-bitcoin/Berksfile
-  rm -rf berks-cookbooks
   berks vendor  --berksfile=./cookbooks/raspberry-bitcoin/Berksfile
   popd
 }
 
 run_chef() {
+  pushd /usr/src/raspberry-bitcoin
   chef-client --local-mode -o raspberry-bitcoin --conf .chef/client.rb
+  popd
 }
 
 
