@@ -2,9 +2,8 @@
 # Cookbook Name:: raspberry-bitcoin
 # Recipe:: default
 #
-# Copyright (C) 2015 YOUR_NAME
+# Copyright (C) 2015 Federico Castagnini
 #
-# All rights reserved - Do Not Redistribute
 #
 
 #include_recipe 'apt'
@@ -20,3 +19,5 @@ base_packages.each do |base_pkg|
   package base_pkg
 end
 ####################
+
+include_recipe 'raspberry-bitcoin::bitcoin-core'

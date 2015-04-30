@@ -18,11 +18,11 @@ DISCLAIMER: This is a personal project to learn about Bitcoin and how to colabor
 Installation
 ------------
 
-1) Flash a clean raspbian onto an SD card
+1) Install Raspbian on a 4Gb or bigger SD card. (There is a guide here http://www.raspberrypi.org/documentation/installation/installing-images/README.md)
 
-2) Boot the raspberry pi, finish the installation and move the rootfs to an external usb hard drive (LINK).
+2) Finish the installation and move the rootfs to an external usb hard drive (LINK).
 
-3) Cook the raspberry pi (reference: http://everydaytinker.com/raspberry-pi/installing-chef-client-on-a-raspberry-pi-2-model-b/)
+3) Cook the pi (reference: http://everydaytinker.com/raspberry-pi/installing-chef-client-on-a-raspberry-pi-2-model-b/)
 
 ```bash
 curl -sL https://raw.githubusercontent.com/facastagnini/raspberry-bitcoin/master/bootstrap.sh | sudo bash
@@ -30,15 +30,9 @@ curl -sL https://raw.githubusercontent.com/facastagnini/raspberry-bitcoin/master
 
 OLD STUFF
 
-1) Install Raspbian on a 32Gb or bigger SD card. (There is a guide here http://www.raspberrypi.org/documentation/installation/installing-images/README.md)
-
 2) Upgrade the system, add base packages, optimize, configure network and expand RAM (installing ZRAM)
 
 ```bash
-# upgrade the system
-apt-get update
-apt-get -y dist-upgrade
-apt-get -y install rpi-update htop iotop usbutils dosfstools bridge-utils iw wpasupplicant vim ifmetric
 
 # configure automatic updates
 apt-get install unattended-upgrades
@@ -197,25 +191,7 @@ chmod +x /etc/init.d/zram
 reboot
 ```
 
-3) The RAM memory will not be enough, so we are going to add 2GB thumb drive as a swap drive
-```bash
-# my usb drive is in /dev/sda
-mkswap /dev/sda
-swapon /dev/sda
 
-# mount automatically on boot
-echo "/dev/sda	none		swap	discard,sw	0	0" >> /etc/fstab
-```
-
-4) Clone this git repo.
-```bash
-apt-get -y install git
-cd /root
-git clone git@github.com:facastagnini/raspberry-bitcoin.git
-
-# add logrotate rule
-ln -s /root/raspberry-bitcoin/logrotate.d/bitcoin /etc/logrotate.d/bitcoin
-```
 
 5) Setup the full node.
    A full node is bla bla bla and provides this this and this and help Bitcoin in this way.
