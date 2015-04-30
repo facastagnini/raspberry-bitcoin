@@ -30,7 +30,7 @@ curl -sL https://raw.githubusercontent.com/facastagnini/raspberry-bitcoin/master
 
 4) Update with:
 ```bash
-sudo rm -rf /usr/src/raspberry-bitcoin/berks-cookbooks ~/.berkshelf/ ; sudo bash -x /vagrant/bootstrap.sh
+sudo rm -rf /usr/src/raspberry-bitcoin/berks-cookbooks ~/.berkshelf/ /.chefg ; sudo bash -x /vagrant/bootstrap.sh
 ```
 
 OLD STUFF
