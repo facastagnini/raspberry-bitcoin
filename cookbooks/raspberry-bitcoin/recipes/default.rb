@@ -21,3 +21,4 @@ end
 ####################
 
 #include_recipe 'raspberry-bitcoin::bitcoin-core'
+include_recipe 'bitcoin'

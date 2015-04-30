@@ -28,6 +28,11 @@ Installation
 curl -sL https://raw.githubusercontent.com/facastagnini/raspberry-bitcoin/master/bootstrap.sh | sudo bash
 ```
 
+4) Update with:
+```bash
+sudo rm -rf /usr/src/raspberry-bitcoin/berks-cookbooks ~/.berkshelf/ ; sudo bash -x /vagrant/bootstrap.sh
+```
+
 OLD STUFF
 
 2) Upgrade the system, add base packages, optimize, configure network and expand RAM (installing ZRAM)
