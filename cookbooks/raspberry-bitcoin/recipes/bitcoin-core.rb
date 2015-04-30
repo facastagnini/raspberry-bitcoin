@@ -38,7 +38,7 @@ bash "install_program" do
 end
 
 # setup the bitcoin config file
-directory /root/.bitcoin
+directory "/root/.bitcoin"
 
 template "/root/.bitcoin/bitcoin.conf" do
   mode "0600"
