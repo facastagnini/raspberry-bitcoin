@@ -62,7 +62,7 @@ run_berks() {
 }
 
 run_chef() {
-  chef-client --local-mode -o raspberry-bitcoin
+  chef-client --local-mode -o raspberry-bitcoin --conf .chef/client.rb
 }
 
 
