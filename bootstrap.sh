@@ -61,7 +61,6 @@ clone_repo() {
 
 run_berks() {
   pushd /usr/src/raspberry-bitcoin
-  #rm -rf ~/.chef/local-mode-cache/cache/cookbooks/raspberry-bitcoin
   rm -rf berks-cookbooks
   berks install --berksfile=./cookbooks/raspberry-bitcoin/Berksfile
   berks update  --berksfile=./cookbooks/raspberry-bitcoin/Berksfile
