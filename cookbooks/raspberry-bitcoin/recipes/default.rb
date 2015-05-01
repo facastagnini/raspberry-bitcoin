@@ -2,9 +2,6 @@
 # Cookbook Name:: raspberry-bitcoin
 # Recipe:: default
 #
-# Copyright (C) 2015 Federico Castagnini
-#
-#
 
 # include_recipe 'apt'
 include_recipe 'apt::unattended-upgrades'

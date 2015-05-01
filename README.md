@@ -31,33 +31,8 @@ curl -sL https://raw.githubusercontent.com/facastagnini/raspberry-bitcoin/master
 sudo rm -rf /usr/src/raspberry-bitcoin/berks-cookbooks ~/.berkshelf/ /.chef ; sudo bash -x /vagrant/bootstrap.sh
 ```
 
+
 OLD STUFF
-
-2) Upgrade the system, add base packages, optimize, configure network and expand RAM (installing ZRAM)
-
-```bash
-
-# configure automatic updates
-apt-get install unattended-upgrades
-cat << EOF >/etc/apt/apt.conf.d/20auto-upgrades
-// Enable the update/upgrade script (0=disable)
-APT::Periodic::Enable "1";
-
-// Do "apt-get update" automatically every n-days (0=disable)
-APT::Periodic::Update-Package-Lists "1";
-
-// Do "apt-get upgrade --download-only" every n-days (0=disable)
-//APT::Periodic::Download-Upgradeable-Packages "1";
-
-// Run the "unattended-upgrade" security upgrade script
-// every n-days (0=disabled)
-// Requires the package "unattended-upgrades" and will write
-// a log in /var/log/unattended-upgrades
-APT::Periodic::Unattended-Upgrade "1";
-
-// Do "apt-get autoclean" every n-days (0=disable)
-APT::Periodic::AutocleanInterval "7";
-EOF
 
 # network configuration
 cat << EOF >/etc/network/interfaces
@@ -97,22 +72,6 @@ EOF
 ```
 
 ```bash
-# log in ram
-service rsyslog stop
-echo "tmpfs		/var/log	tmpfs	nosuid,noexec,nodev,mode=0755,size=32M" >>/etc/fstab
-rm -r /var/log/*
-mount /var/log
-service rsyslog start
-
-# /tmp in ram
-echo "RAMTMP=yes" >> /etc/default/tmpfs
-
-# update the firmware
-rpi-update
-
-# Remove the extra tty's
-sed -i '/[2-6]:23:respawn:\/sbin\/getty 38400 tty[2-6]/s%^%#%g' /etc/inittab
-
 # Optimize / mount
 #sed -i 's/defaults,noatime/defaults,noatime,nodiratime/g' /etc/fstab
 
@@ -120,12 +79,6 @@ sed -i '/[2-6]:23:respawn:\/sbin\/getty 38400 tty[2-6]/s%^%#%g' /etc/inittab
 echo "net.ipv6.conf.all.disable_ipv6=1" > /etc/sysctl.d/disableipv6.conf
 echo 'blacklist ipv6' >> /etc/modprobe.d/blacklist
 sed -i '/::/s%^%#%g' /etc/hosts
-
-# cNOOP scheduler is best used with solid state devices such as flash memory.
-sed -i 's/deadline/noop/g' /boot/cmdline.txt
-
-# remove syslog
-# apt-get -y remove --purge rsyslog
 
 # compile zram module
 # zram: https://github.com/raspberrypi/linux/issues/179#issuecomment-14164706
@@ -194,21 +147,6 @@ chmod +x /etc/init.d/zram
 reboot
 ```
 
-
-
-5) Setup the full node.
-
-# start the bitcoin daemon
-/usr/local/bin/bitcoind -conf=/root/.bitcoin/bitcoin.conf 
-```
-
-Bitcoind will connect to some peers and start downloading the blockchain. You can monitor the progress with the folowing command:
-
-```bash
-bitcoin-cli getinfo
-```
-
-
 6) Install CGMiner 
 ```bash
 # install building dependencies
@@ -275,9 +213,6 @@ vi samples/docs/docs_example.py
 	# print the IP address
 	echo "My IP address is $(hostname -I)" || true
 	
-	# start bitcoind
-	/usr/local/bin/bitcoind -conf=/root/.bitcoin/bitcoin.conf
-	
 	cd /usr/src/PiMiner
 	python PiMiner.py &
 	nohup /usr/src/cgminer/cgminer --config /etc/cgminer.conf >/dev/null 2>&1&
@@ -289,7 +224,7 @@ vi samples/docs/docs_example.py
 Firewall rules
 --------------
 
-Don't forget to forward port TCP/8333 internet traffic to the Raspberry Pi.
+Don't forget to forward TCP/8333 internet traffic to the Raspberry Pi.
 
 
 ASIC USB miner
@@ -317,4 +252,4 @@ Contributing and Development
 ----------------------------
 
 Bugs and PRs are welcome!
-I develope and test with vagrant, then I test on a fresh raspberry pi.
+I code and test with vagrant, then I test on a fresh raspberry pi.
