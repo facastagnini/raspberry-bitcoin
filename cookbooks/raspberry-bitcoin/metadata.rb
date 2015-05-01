@@ -10,7 +10,7 @@ source_url       'https://github.com/facastagnini/raspberry-bitcoin'
 
 depends 'apt'
 depends 'locale'
-depends 'timezone-ii'
+depends 'timezone_lwrp'
 depends 'ntp'
 depends 'raspberry-pi'
 depends 'bitcoin'

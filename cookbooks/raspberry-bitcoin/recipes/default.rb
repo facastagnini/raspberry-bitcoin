@@ -6,7 +6,7 @@
 # include_recipe 'apt'
 include_recipe 'apt::unattended-upgrades'
 include_recipe 'ntp'
-include_recipe 'timezone-ii'
+include_recipe 'timezone_lwrp'
 include_recipe 'locale'
 
 ####################
