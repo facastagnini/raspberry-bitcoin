@@ -2,7 +2,6 @@ Raspberry-Bitcoin
 =================
 
 [![Build Status](https://secure.travis-ci.org/facastagnini/raspberry-bitcoin.svg?branch=master)](https://travis-ci.org/facastagnini/raspberry-bitcoin)
-[![Github Releases](https://img.shields.io/github/downloads/facastagnini/raspberry-bitcoin/latest/total.svg)]()
 
 
 THIS IS WORK IN PROGRESS: I am writing chef code to automate/manage the installation.
