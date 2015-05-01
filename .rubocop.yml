@@ -6,7 +6,3 @@ Style/SingleSpaceBeforeFirstArg:
 
 Style/StringLiterals:
   Enabled: false
-
-AllCops:
-  Excludes:
-    - Vagrantfile
