@@ -12,8 +12,7 @@ install_dependencies() {
 }
 
 increase_swap() {
-  echo "CONF_SWAPSIZE=4096" > /etc/dphys-swapfile
-  dphys-swapfile swapoff
+  echo -e "CONF_SWAPSIZE=4096\nCONF_MAXSWAP=4096" > /etc/dphys-swapfile
   dphys-swapfile setup
   dphys-swapfile swapon
 }
