@@ -9,4 +9,4 @@ Style/StringLiterals:
 
 AllCops:
   Excludes:
-  	- Vagrantfile
+    - Vagrantfile
