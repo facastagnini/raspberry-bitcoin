@@ -70,7 +70,7 @@ run_berks() {
 
 run_chef() {
   pushd /usr/src/raspberry-bitcoin
-  chef-client --local-mode -o raspberry-bitcoin --conf .chef/client.rb --debug
+  chef-client --local-mode -o raspberry-bitcoin --conf .chef/client.rb --log_level info
   popd
 }
 
