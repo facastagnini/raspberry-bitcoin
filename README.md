@@ -1,9 +1,9 @@
 Raspberry-Bitcoin
 =================
 
-[![Build Status](https://secure.travis-ci.org/facastagnini/raspberry-bitcoin.svg?branch=master)](https://travis-ci.org/facastagnini/raspberry-bitcoin)[1]
-[![Code Coverage](http://img.shields.io/coveralls/facastagnini/raspberry-bitcoin.svg)][2]
-[![Dependencies](http://img.shields.io/gemnasium/facastagnini/raspberry-bitcoin.svg)][3]
+[![Build Status](https://secure.travis-ci.org/facastagnini/raspberry-bitcoin.svg?branch=master)](https://travis-ci.org/facastagnini/raspberry-bitcoin)
+[![Code Coverage](http://img.shields.io/coveralls/facastagnini/raspberry-bitcoin.svg)]
+[![Dependencies](http://img.shields.io/gemnasium/facastagnini/raspberry-bitcoin.svg)]
 
 
 THIS IS WORK IN PROGRESS: I am writing chef code to automate/manage the installation.
