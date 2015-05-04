@@ -1,7 +1,7 @@
 Raspberry-Bitcoin
 =================
 
-[![Build Status](https://secure.travis-ci.org/facastagnini/raspberry-bitcoin.svg?branch=master)](https://travis-ci.org/facastagnini/raspberry-bitcoin)
+[![Build Status](http://img.shields.io/travis/facastagnini/raspberry-bitcoin.svg)]
 [![Code Coverage](http://img.shields.io/coveralls/facastagnini/raspberry-bitcoin.svg)]
 [![Dependencies](http://img.shields.io/gemnasium/facastagnini/raspberry-bitcoin.svg)]
 
