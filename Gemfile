@@ -1,10 +1,9 @@
 source 'https://rubygems.org'
 
-gem 'coveralls', require: false
-
-group :lint do
+group :test do
   gem 'foodcritic'
   gem 'rubocop'
+  gem 'coveralls',  require: false
 end
 
 group :development do
