@@ -4,7 +4,8 @@ default['apt']['unattended_upgrades']['allowed_origins'] = [
   "#{node['platform'].capitalize} stable"
 ]
 
-default['bitcoin']['source']['version'] = '0.10.1'
-default['bitcoin']['source']['checksum'] = '18a88785748588bb90764dc7f0aad5548da880d4d91f5803c7076cbcadb2959e'
+default['bitcoin']['source']['url'] = 'https://github.com/bitcoinxt/bitcoinxt'
+default['bitcoin']['source']['version'] = '0.11A'
+default['bitcoin']['source']['checksum'] = 'bd7a9226a14e74aab5ae684e7fa90d7815a2335c'
 
 default['tz'] = 'EDT'
