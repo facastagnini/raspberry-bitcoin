@@ -6,6 +6,6 @@ default['apt']['unattended_upgrades']['allowed_origins'] = [
 
 default['bitcoin']['source']['url'] = 'https://github.com/bitcoinxt/bitcoinxt'
 default['bitcoin']['source']['version'] = '0.11A'
-default['bitcoin']['source']['checksum'] = '06b30f040696490474667e57d0802069'
+default['bitcoin']['source']['checksum'] = '730eaa117b72778e17bb94f27f985002beb73618775e10623a0af349db84649e'
 
 # default['tz'] = 'EDT'
