@@ -1,7 +1,11 @@
 source 'https://rubygems.org'
 
 group :test do
-  gem 'rake'
   gem 'foodcritic'
   gem 'rubocop'
+end
+
+group :unit do
+  gem 'berkshelf'
+  gem 'chefspec'
 end
