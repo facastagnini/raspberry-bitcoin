@@ -1,5 +1,7 @@
 language: ruby
 rvm:
+  - 2.0
+  - 2.1
   - 2.2
   - ruby-head
 matrix:
@@ -9,6 +11,10 @@ notifications:
   email:
     on_success: change
     on_failure: always
+script:
+  - bundle exec rubocop
+#  - bundle exec rspec --color --format progress
+#  - bundle exec foodcritic -f any .
 
 # install:
 #  - sudo apt-get install libqt4-dev
