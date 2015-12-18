@@ -29,6 +29,7 @@ sudo rm -rf /usr/src/raspberry-bitcoin/berks-cookbooks ~/.berkshelf/ /.chef ; su
 
 OLD STUFF not yet implemented in chef
 
+```bash
 # network configuration
 cat << EOF >/etc/network/interfaces
 auto lo
