@@ -70,6 +70,7 @@ EOF
 ```bash
 # Optimize / mount
 #sed -i 's/defaults,noatime/defaults,noatime,nodiratime/g' /etc/fstab
+```
 
 Firewall rules
 --------------
