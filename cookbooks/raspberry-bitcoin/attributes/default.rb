@@ -4,7 +4,7 @@ default['apt']['unattended_upgrades']['allowed_origins'] = [
   "#{node['platform'].capitalize} stable"
 ]
 
-default['bitcoin']['source']['version'] = '0.11.0'
-default['bitcoin']['source']['checksum'] = 'efc6c496e0a3649a00aa30f07f7e86600b2d79890735fd5df8cc0fcaaf40e734'
+default['bitcoin']['source']['version'] = '0.11.2'
+default['bitcoin']['source']['checksum'] = '2d9c66d31b24720c5e5317dd16d8fd9f4123c95c6d4aa4cec8f5c325afb94b08'
 
 # default['tz'] = 'EDT'
